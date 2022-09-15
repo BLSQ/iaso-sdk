@@ -46,8 +46,6 @@ class SimpleOrgUnitModel:
     org_unit_type_name: str
     created_at: datetime
     updated_at: datetime
-    aliases: Optional[List[str]]
-    groups: List[int] = field(default_factory=list)
     validation_status: Literal["NEW", "VALID", "REJECTED"] = "NEW"
 
 
@@ -309,9 +307,6 @@ class IASOContext:
         )
         results = []
         for d in data:
-            groups = []
-            for g in d["groups"]:
-                groups.append(d["id"])
             results.append(
                 SimpleOrgUnitModel(
                     id=d["id"],
@@ -322,8 +317,6 @@ class IASOContext:
                     created_at=datetime.fromtimestamp(d["created_at"]),
                     updated_at=datetime.fromtimestamp(d["updated_at"]),
                     validation_status=d["validation_status"],
-                    aliases=json["aliases"],
-                    groups=groups,
                 )
             )
         results.sort(key=operator.attrgetter("id"))
